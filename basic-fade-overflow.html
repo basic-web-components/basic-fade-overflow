@@ -1,0 +1,93 @@
+<!--
+Fade out content that overflows so the user knows there's more.
+
+This component doesn't handle interactivity. If you want the user to be able to,
+for example, expand the component to see the overflowing content, you'll need to
+combine this with a component like Polymer's core-collapse.
+
+By default, this component assumes that it should fade to white. If using on a
+background other than white, set the fadeStart and fadeEnd properties to the
+desired colors.
+
+@element basic-fade-overflow
+@demo http://basic-web-components.github.io/components/basic-fade-overflow/
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="basic-fade-overflow" attributes="fadeColor">
+
+<template>  
+
+  <style>
+  :host {
+    display: block;
+    position: relative;
+  }
+
+  #container {
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #fade {
+    bottom: 0;
+    height: 3em;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+  }
+  </style>
+
+  <div id="container">
+    <div id="fade" _style="background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, {{fadeColor}} 100%);"></div>
+    <content></content>
+  </div>
+
+</template>
+
+<script>
+Polymer({
+
+  attached: function() {
+    if ( this.fadeColor == null ) {
+      // Infer fade color from background color.
+      var backgroundColor = this._findBackgroundColor( this );
+      console.log( backgroundColor );
+      this.fadeColor = backgroundColor;
+    }
+  },
+
+  /**
+   * The color of the fade.
+   *
+   * When used on a background other than white, this should be set to the same
+   * as the background color. This should be a solid color.
+   *
+   * @property fadeColor
+   * @default white
+   */
+  // TODO: Infer fade color from background when added (attached) to document.
+  fadeColor: null,
+
+  // Return the background color of the given element. If the color is
+  // "transparent" (the default in Mozilla and IE), walk up the parent chain
+  // until a non-transparent color is found.
+  _findBackgroundColor: function( element ) {
+    var backgroundColor = getComputedStyle( element ).backgroundColor;
+    console.log( backgroundColor );
+    if ( backgroundColor === "transparent" ) {
+      var parent = element.parentNode;
+      return ( parent )
+        ? this._findBackgroundColor( parent )
+        : "white";    // Didn't find an element with a background
+    } else {
+      return backgroundColor;
+    }
+  }
+
+});
+</script>
+
+</polymer-element>

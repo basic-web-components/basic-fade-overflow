@@ -1,0 +1,20 @@
+{
+  "name": "basic-fade-overflow",
+  "description": "Fade out content that overflows so the user knows there's more",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "basic-fade-overflow.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#master"
+  },
+  "devDependencies": {
+    "basic-framed-content": "basic-web-components/basic-framed-content#master"
+  },
+  "keywords": [
+    "basic-web-components",
+    "web-components"
+  ],
+  "ignore": [
+    "**/.*"
+  ]
+}
