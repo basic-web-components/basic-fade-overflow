@@ -9,8 +9,14 @@ By default, this component assumes that it should fade to white. If using on a
 background other than white, set the fadeStart and fadeEnd properties to the
 desired colors.
 
+The component currently always displays the fade, even if the component's
+content is short enough to fit completely in view.
+
 @element basic-fade-overflow
 @demo http://basic-web-components.github.io/components/basic-fade-overflow/
+-->
+<!--
+TODO: Hide the fade if all the content can be seen.
 -->
 
 <link rel="import" href="../polymer/polymer.html">
