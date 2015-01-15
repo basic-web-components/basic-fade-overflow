@@ -41,7 +41,7 @@ desired colors.
   </style>
 
   <div id="container">
-    <div id="fade" _style="background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, {{fadeColor}} 100%);"></div>
+    <div id="fade" _style="background: linear-gradient(to bottom, {{fadeColorTransparent}} 0%, {{fadeColor}} 100%);"></div>
     <content></content>
   </div>
 
@@ -52,18 +52,17 @@ Polymer({
 
   attached: function() {
     if ( this.fadeColor == null ) {
-      // Infer fade color from background color.
-      var backgroundColor = this._findBackgroundColor( this );
-      console.log( backgroundColor );
-      this.fadeColor = backgroundColor;
+      this.refresh();
     }
   },
 
   /**
    * The color of the fade.
    *
-   * When used on a background other than white, this should be set to the same
-   * as the background color. This should be a solid color.
+   * The fade color should match the background color. The component does its
+   * best to infer the background color, but in some situations, that may not
+   * work. In those cases, you can manually identify the background color.
+   * This should be a solid color.
    *
    * @property fadeColor
    * @default white
@@ -71,19 +70,56 @@ Polymer({
   // TODO: Infer fade color from background when added (attached) to document.
   fadeColor: null,
 
+  fadeColorChanged: function() {
+    if ( this.fadeColor ) {
+      var rgb = this._extractRgbValues( this.fadeColor );
+      if ( rgb ) {
+        this.fadeColorTransparent = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0)";  
+      }
+    }
+  },
+
+  /**
+   * Infer the fade color from background color. If you have programmatically
+   * changed the color behind the component, you can invoke this method to have
+   * the component try to pick up the new background color.
+   *
+   * @method refresh
+   */
+  refresh: function() {
+    var backgroundColor = this._findBackgroundColor( this );
+    console.log( backgroundColor );
+    this.fadeColor = backgroundColor;
+  },
+
   // Return the background color of the given element. If the color is
-  // "transparent" (the default in Mozilla and IE), walk up the parent chain
+  // "transparent" (the default in Mozilla and IE) or "rgba(0, 0, 0, 0)" (the
+  // default transparent value in Blink and Webkit), walk up the parent chain
   // until a non-transparent color is found.
   _findBackgroundColor: function( element ) {
+    if ( element == null || typeof element.style === "undefined" ) {
+      // This element has no background, assume white.
+      return "rgb(255,255,255)";
+    }
     var backgroundColor = getComputedStyle( element ).backgroundColor;
-    console.log( backgroundColor );
-    if ( backgroundColor === "transparent" ) {
-      var parent = element.parentNode;
-      return ( parent )
-        ? this._findBackgroundColor( parent )
-        : "white";    // Didn't find an element with a background
+    if ( backgroundColor === "transparent" || backgroundColor === "rgba(0, 0, 0, 0)" ) {
+      return this._findBackgroundColor( element.parentNode )
     } else {
       return backgroundColor;
+    }
+  },
+
+  _extractRgbValues: function( rgbString ) {
+    rgbRegex = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*[\d\.]+\s*)?\)/;
+    var match = rgbRegex.exec( rgbString );
+    if ( match ) {
+      return {
+        r: parseInt( match[1] ),
+        g: parseInt( match[2] ),
+        b: parseInt( match[3] )
+      };
+    } else {
+      return null;
     }
   }
 
