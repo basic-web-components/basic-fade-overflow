@@ -5,9 +5,9 @@ This component doesn't handle interactivity. If you want the user to be able to,
 for example, expand the component to see the overflowing content, you'll need to
 combine this with a component like Polymer's core-collapse.
 
-By default, this component assumes that it should fade to white. If using on a
-background other than white, set the fadeStart and fadeEnd properties to the
-desired colors.
+The component needs to know the color it should fade to, which it tries to infer
+from the background color. In some situations, this may not work, in which case
+you can explicitly set the fadeColor attribute.
 
 The component currently always displays the fade, even if the component's
 content is short enough to fit completely in view.
