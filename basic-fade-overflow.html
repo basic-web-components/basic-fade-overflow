@@ -51,7 +51,7 @@ TODO: Hide the fade if all the content can be seen.
 Polymer({
 
   attached: function() {
-    if ( this.fadeColor == null ) {
+    if (this.fadeColor == null) {
       this.refresh();
     }
   },
@@ -71,10 +71,10 @@ Polymer({
   fadeColor: null,
 
   fadeColorChanged: function() {
-    if ( this.fadeColor ) {
-      var rgb = this._extractRgbValues( this.fadeColor );
-      if ( rgb ) {
-        this.fadeColorTransparent = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0)";  
+    if (this.fadeColor) {
+      var rgb = this._extractRgbValues(this.fadeColor);
+      if (rgb) {
+        this.fadeColorTransparent = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0)';
       }
     }
   },
@@ -87,7 +87,7 @@ Polymer({
    * @method refresh
    */
   refresh: function() {
-    var backgroundColor = this._findBackgroundColor( this );
+    var backgroundColor = this._findBackgroundColor(this);
     this.fadeColor = backgroundColor;
   },
 
@@ -95,29 +95,31 @@ Polymer({
   // "transparent" (the default in Mozilla and IE) or "rgba(0, 0, 0, 0)" (the
   // default transparent value in Blink and Webkit), walk up the parent chain
   // until a non-transparent color is found.
-  _findBackgroundColor: function( element ) {
-    if ( element == null || typeof element.style === "undefined" ) {
+  _findBackgroundColor: function(element) {
+    if (element == null || typeof element.style === 'undefined') {
       // This element has no background, assume white.
-      return "rgb(255,255,255)";
+      return 'rgb(255,255,255)';
     }
-    var backgroundColor = getComputedStyle( element ).backgroundColor;
-    if ( backgroundColor === "transparent" || backgroundColor === "rgba(0, 0, 0, 0)" ) {
-      return this._findBackgroundColor( element.parentNode )
-    } else {
+    var backgroundColor = getComputedStyle(element).backgroundColor;
+    if (backgroundColor === 'transparent' || backgroundColor === 'rgba(0, 0, 0, 0)') {
+      return this._findBackgroundColor(element.parentNode)
+    }
+    else {
       return backgroundColor;
     }
   },
 
-  _extractRgbValues: function( rgbString ) {
+  _extractRgbValues: function(rgbString) {
     rgbRegex = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*[\d\.]+\s*)?\)/;
-    var match = rgbRegex.exec( rgbString );
-    if ( match ) {
+    var match = rgbRegex.exec(rgbString);
+    if (match) {
       return {
-        r: parseInt( match[1] ),
-        g: parseInt( match[2] ),
-        b: parseInt( match[3] )
+        r: parseInt(match[1]),
+        g: parseInt(match[2]),
+        b: parseInt(match[3])
       };
-    } else {
+    }
+    else {
       return null;
     }
   }
